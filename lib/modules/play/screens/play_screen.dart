@@ -7,6 +7,7 @@ import 'package:alpha_quiz/modules/play/components/result_view.dart';
 import 'package:alpha_quiz/modules/play/components/short_answer_view.dart';
 import 'package:alpha_quiz/modules/play/components/true_false_view.dart';
 import 'package:alpha_quiz/modules/play/provider/play_screen_vm.dart';
+import 'package:alpha_quiz/modules/play/screens/editing_screen.dart';
 import 'package:alpha_quiz/modules/play/screens/result_screen.dart';
 import 'package:alpha_quiz/modules/play/screens/waiting_screen.dart';
 import 'package:alpha_quiz/styles/alpha_quiz_theme.dart';
@@ -61,6 +62,12 @@ class _PlayScreenState extends State<PlayScreen> {
 
           if (vm.screenState == PlayScreenState.showingQuizResult) {
             return const ResultScreen();
+          }
+
+          if (vm.screenState == PlayScreenState.editing) {
+            return const EditingScreen(
+              message: 'This quiz has not started yet.',
+            );
           }
 
           if (vm.screenState == PlayScreenState.ended) {

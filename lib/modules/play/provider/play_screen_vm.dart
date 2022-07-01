@@ -13,6 +13,7 @@ enum PlayScreenState {
   loading,
   playing,
   waiting,
+  editing,
   showingAnswerResult,
   showingQuizResult,
   ended,
@@ -193,12 +194,19 @@ class PlayScreenVM extends ChangeNotifier {
   }
 
   Future<void> fetchData() async {
+    _screenState = PlayScreenState.loading;
+    notifyListeners();
+
     final quizData = await QuizAPI.syncInfo(_toolId);
 
     _quizData = quizData;
     _platformUserId = quizData.platformUserId;
 
-    if (quizData.instance?.status == 'done') {
+    final status = quizData.instance?.status;
+
+    if (status == null || status == 'editing') {
+      _screenState = PlayScreenState.editing;
+    } else if (status == 'done') {
       _screenState = PlayScreenState.showingQuizResult;
     } else {
       _screenState = PlayScreenState.waiting;
