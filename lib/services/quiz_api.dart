@@ -62,7 +62,9 @@ class QuizAPI {
             'state': '',
           });
 
-      print(data);
+      if (data['alpha_token'] == null) {
+        throw Exception('Cannot get alpha token');
+      }
 
       return data['alpha_token'];
     } catch (_, __) {
@@ -79,7 +81,12 @@ class QuizAPI {
             'id_token': token,
             'state': '',
           });
-      print(data);
+
+      if (data['data'] == null) {
+        final error = data['error'].toString();
+        final message = data['details']?['message'].toString();
+        throw Exception(error + '\n' + (message ?? ''));
+      }
 
       return AlphaQuiz.fromJson(data['data']);
     } catch (_, __) {

@@ -54,6 +54,60 @@ class _PlayScreenState extends State<PlayScreen> {
         child: Consumer<PlayScreenVM>(builder: (context, _, __) {
           // final quizRoom = vm.quizRoom;
 
+          if (vm.errorMessage != null) {
+            return Scaffold(
+              body: Center(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/lottie_files/circle-x.json',
+                        package: 'alpha_quiz',
+                        width: 40,
+                        height: 40,
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      const Text(
+                        'Error',
+                        style: TextStyles.subtitle1SemiBold,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        vm.errorMessage ?? '',
+                        style: TextStyles.subtitle1Regular,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Return'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
           if (vm.screenState == PlayScreenState.loading) {
             return const Scaffold(
               body: Center(child: CupertinoActivityIndicator()),

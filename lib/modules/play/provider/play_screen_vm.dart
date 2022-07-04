@@ -197,7 +197,15 @@ class PlayScreenVM extends ChangeNotifier {
     _screenState = PlayScreenState.loading;
     notifyListeners();
 
-    final quizData = await QuizAPI.syncInfo(_toolId);
+    final AlphaQuiz quizData;
+    try {
+      quizData = await QuizAPI.syncInfo(_toolId);
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+
+      return;
+    }
 
     _quizData = quizData;
     _platformUserId = quizData.platformUserId;
@@ -209,8 +217,6 @@ class PlayScreenVM extends ChangeNotifier {
     } else if (status == 'done') {
       _screenState = PlayScreenState.showingQuizResult;
     } else {
-      _screenState = PlayScreenState.waiting;
-
       start();
     }
 
@@ -237,11 +243,14 @@ class PlayScreenVM extends ChangeNotifier {
           'join',
           {'username': username, 'room': room, 'token': alphaToken},
         );
+
+        _screenState = PlayScreenState.waiting;
+
+        notifyListeners();
       }
     });
     //
     try {
-      _screenState = PlayScreenState.waiting;
       final response = await QuizAPI.getQuizRoom(_toolId);
       quizRoom = response;
 
@@ -259,6 +268,8 @@ class PlayScreenVM extends ChangeNotifier {
           'join',
           {'username': username, 'room': room, 'token': token},
         );
+
+        _screenState = PlayScreenState.waiting;
       }
 
       // final quizId = int.parse(quizRoom?.quizId ?? '');
